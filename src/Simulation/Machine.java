@@ -1,6 +1,7 @@
 package Simulation;
 
 
+import java.util.Random;
 import java.util.function.ToDoubleBiFunction;
 
 /**
@@ -144,7 +145,7 @@ public class Machine implements CProcess,ProductAcceptor
 		// generate duration
 		if(meanProcTime>0)
 		{
-			double duration = drawRandomExponential(meanProcTime);
+			double duration = drawPoissonDist(meanProcTime);
 			// Create a new event in the eventlist
 			double tme = eventlist.getTime();
 			eventlist.add(this,0,tme+duration); //target,type,time
@@ -177,7 +178,17 @@ public class Machine implements CProcess,ProductAcceptor
 	}
 
 	// TODO: Implement this method
-	public static void drawPoissonDist(double mean)
-	{}
+	public static int drawPoissonDist(double mean)
+	{
+		Random r = new Random();
+		double L = Math.exp(-mean);
+		int k = 0;
+		double p = 1.0;
+		do {
+			p = p * r.nextDouble();
+			k++;
+		} while (p > L);
+		return k - 1;
+	}
 
 }
