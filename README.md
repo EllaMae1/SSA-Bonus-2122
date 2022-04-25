@@ -1,1 +1,66 @@
 # SSA-Bonus-2122
+
+# set up:
+## Given to Implement
+### Supermarket:
+		            + 6 cash registers available (*1):
+						                          - 5 regular cash registers 
+                                      - 1 combined cash register/service desk: 
+																			2 queues (*2):    + regular customers
+																								       + service desk customers(priority)
+						
+						    + Arriving customers :			
+														         - queue up by checking number customers in line at each of the cash registers(shortest queue)
+														         - service desk customers (e.g. cigarettes, lottery, stamps, etc.) can only line up for the service desk. 
+														
+						
+### Customers :
+						    + Regular arrival:              
+                                      - Poisson process at a rate of 1 per minute.
+														          - Service times: normally distributed with mean 2.6 minutes and a standard deviation of 1.1 minutes, 
+                                                       where the smallest service time is 1 second.
+						
+						    + Service desk  arrival:         
+                                      - Poisson process with mean interarrival time 5 minutes 
+														          - Service times: a normally distributed  of on average 4.1 minutes and a standard deviation of 1.1 minutes, 
+																		                   where again the minimum service time is 1 second. 
+                                                       
+### Rules to consider durin implementation:
+
+					(*1) - Service desk always open
+						   - Minimum two additional cash registers are
+						   - if registers(queue length)=> 4 => open one more < max cash registers
+						   - if register is empty => close it  (be pragmatic)
+						
+					(*2) - Total queue length :	- Service desk return the sum of the lengths of both queues.
+						
+(Implement this setting in java, using the engine provided and modifying it where necessary, but don’t start making large modifications and optimizations.) 
+
+### Output:			
+						+ Measures of interest are the mean delay of customers:
+														- Mean delay of regular customers 
+														- Mean delay for service desk customers 
+														- Overall delay
+														- Average queue length
+						+ Provide for these four measures a 95% t-confidence interval
+						
+            
+            (Goal Summary) 
+            
+            1- Generate values from java simulation
+            2- Export organized data table to matlab data file format
+            3- Run statistics over data in matlab.
+            
+            (To consider):  
+						
+            (!) Do proper statistics, all assumptions of such confidence interval are satisfied.
+						(The statistical analysis can be performed in Matlab.)
+						
+						(!) (Ultimate goal) For PR reasons : estimate a maximum delay and a maximum queue length that can be guaranteed 95% of the time for each type of customer. 
+						
+						
+						
+						
+						
+						
+						
