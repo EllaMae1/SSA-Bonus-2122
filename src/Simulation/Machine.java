@@ -1,6 +1,7 @@
 package Simulation;
 
 
+import java.util.function.ToDoubleBiFunction;
 
 /**
  *	Machine in a factory
@@ -174,4 +175,9 @@ public class Machine implements CProcess,ProductAcceptor
 		double res = -mean*Math.log(u);
 		return res;
 	}
+
+	// TODO: Implement this method
+	public static void drawPoissonDist(double mean)
+	{}
+
 }
