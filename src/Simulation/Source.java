@@ -1,5 +1,7 @@
 package Simulation;
 
+import java.util.Random;
+
 /**
  *	A source of products
  *	This class implements CProcess so that it can execute events.
@@ -89,7 +91,9 @@ public class Source implements CProcess
 		// generate duration
 		if(meanArrTime>0)
 		{
-			double duration = drawRandomExponential(meanArrTime);
+			double duration = drawPoissonDist(meanArrTime);
+			//double duration = drawRandomExponential(meanArrTime);
+
 			// Create a new event in the eventlist
 			list.add(this,0,tme+duration); //target,type,time
 		}
@@ -114,5 +118,18 @@ public class Source implements CProcess
 		// Convert it into a exponentially distributed random variate with mean 33
 		double res = -mean*Math.log(u);
 		return res;
+	}
+
+	public static int drawPoissonDist(double mean)
+	{
+		Random r = new Random();
+		double L = Math.exp(-mean);
+		int k = 0;
+		double p = 1.0;
+		while (p > L){
+			p = p * r.nextDouble();
+			k++;
+		}
+		return k - 1;
 	}
 }
