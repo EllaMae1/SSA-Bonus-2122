@@ -6,7 +6,8 @@ Given to Implement:
 		- 5 regular cash registers 
                 - 1 combined cash register/service desk: 
 		  	2 queues (*2):    + regular customers
-																								       + service desk customers(priority)
+
+																								      + service desk customers(priority)
 						
 	+ Arriving customers :			
 	         - queue up by checking number customers in line at each of the cash registers(shortest queue)
@@ -20,7 +21,7 @@ Given to Implement:
                                   where the smallest service time is 1 second.
 						
 	+ Service desk  arrival:         
-                - Poisson process with mean interarrival time 5 minutes 
+                - Poisson process with mean interarrival time 5 minutes
 		- Service times: a normally distributed  of on average 4.1 minutes and a standard deviation of 1.1 minutes, 
 		                 where again the minimum service time is 1 second. 
                                                        
@@ -35,7 +36,7 @@ Given to Implement:
 						
 (Implement this setting in java, using the engine provided and modifying it where necessary, but don’t start making large modifications and optimizations.) 
 
-- Output:			
+- Output:
 	+ Measures of interest are the mean delay of customers:
 		- Mean delay of regular customers 
 		- Mean delay for service desk customers 
@@ -44,8 +45,8 @@ Given to Implement:
 	+ Provide for these four measures a 95% t-confidence interval
 						
             
-            (Goal Summary) 
-            
+            (Goal Summary)
+
             1- Generate values from java simulation
             2- Export organized data table to matlab data file format
             3- Run statistics over data in matlab.

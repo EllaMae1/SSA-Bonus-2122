@@ -19,12 +19,12 @@ public class Simulation {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-    	// Create an eventlist
+        // Create an eventlist
 	CEventList l = new CEventList();
 	// A queue for the machine
 	Queue q = new Queue();
 	// A source
-	Source s = new Source(q,l,"Source 1");
+	Source s = new Source(q,l,"ServiceDeskSource 1");
 	// A sink
 	Sink si = new Sink("Sink 1");
 	// A machine
@@ -32,5 +32,4 @@ public class Simulation {
 	// start the eventlist
 	l.start(2000); // 2000 is maximum time
     }
-    
 }

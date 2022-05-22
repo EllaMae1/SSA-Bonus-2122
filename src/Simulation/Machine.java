@@ -12,23 +12,23 @@ import java.util.function.ToDoubleBiFunction;
 public class Machine implements CProcess,ProductAcceptor
 {
 	/** Product that is being handled  */
-	private Product product;
+	public Product product;
 	/** Eventlist that will manage events */
-	private final CEventList eventlist;
+	public final CEventList eventlist;
 	/** Queue from which the machine has to take products */
-	private Queue queue;
+	public Queue queue;
 	/** Sink to dump products */
-	private ProductAcceptor sink;
+	public ProductAcceptor sink;
 	/** Status of the machine (b=busy, i=idle) */
-	private char status;
+	public char status;
 	/** Machine name */
-	private final String name;
+	public final String name;
 	/** Mean processing time */
-	private double meanProcTime;
+	public double meanProcTime;
 	/** Processing times (in case pre-specified) */
-	private double[] processingTimes;
+	public double[] processingTimes;
 	/** Processing time iterator */
-	private int procCnt;
+	public int procCnt;
 	
 
 	/**
@@ -192,4 +192,26 @@ public class Machine implements CProcess,ProductAcceptor
 		return k - 1;
 	}
 
+	public static double drawRandomNormal(double mean, double std)
+	{
+		double r, x, y;
+
+		// find a uniform random point (x, y) inside unit circle
+		do {
+			x = 2.0 * Math.random() - 1.0;
+			y = 2.0 * Math.random() - 1.0;
+			r = x*x + y*y;
+		}
+		while (r > 1 || r == 0);
+
+		// apply the Box-Muller formula to get standard Gaussian z
+		double z = x * Math.sqrt(-2.0 * Math.log(r) / r);
+
+		double norm = z*std + mean;
+		if (norm <1){
+			norm = 1;
+		}
+		// print it to standard output
+		return norm;
+	}
 }

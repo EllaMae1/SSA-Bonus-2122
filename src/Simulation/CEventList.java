@@ -90,7 +90,7 @@ public class CEventList implements CProcess
 		// stop criterion
 		while((events.size()>0)&&(!stopFlag))
 		{
-			// Make the similation time equal to the execution time of the first event in the list that has to be processed
+			// Make the simulation time equal to the execution time of the first event in the list that has to be processed
 			currentTime=events.get(0).getExecutionTime();
 			// Let the element be processed
 			events.get(0).execute();

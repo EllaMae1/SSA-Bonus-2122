@@ -3,7 +3,7 @@ package Simulation;
 import java.util.ArrayList;
 
 /**
- *	Queue that stores products until they can be handled on a machine machine
+ *	Queue that stores products until they can be handled on a machine
  *	@author Joel Karel
  *	@version %I%, %G%
  */
