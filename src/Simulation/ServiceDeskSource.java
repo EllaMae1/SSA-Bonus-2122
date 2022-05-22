@@ -37,4 +37,43 @@ public class ServiceDeskSource implements CProcess {
         // add event to event list
         list.add(this,0,tme+duration);
     }
+
+    /*
+    public void execute(int type, double tme)
+    {
+        // show arrival
+        System.out.println("GPU Job Arrival at time = " + tme);
+        // give arrived product to queue
+        Product p = new Product(1);
+
+        p.stamp(tme,"Creation",name);
+        queue.giveProduct(p);
+        // generate duration
+        if(meanArrTime>0)
+        {
+            double duration = Source.drawPoissonDist(meanArrTime);
+            // Create a new event in the eventlist
+            list.add(this,0,tme+duration); //target,type,time
+        }
+        else
+        {
+            interArrCnt++;
+            if(interarrivalTimes.length>interArrCnt)
+            {
+                list.add(this,0,tme+interarrivalTimes[interArrCnt]); //target,type,time
+            }
+            else
+            {
+                list.stop();
+            }
+        }
+    }
+        */
+
+    public static double drawPoissonDist(double t)
+    {
+        double lambda = t;
+        double time = -Math.log(1 - Math.random()) * lambda;
+        return  time;
+    }
 }
