@@ -38,6 +38,17 @@ public class Machine implements CProcess,ProductAcceptor
 	*	@param e	Eventlist that will manage events
 	*	@param n	The name of the machine
 	*/
+	public Machine(Queue q, ProductAcceptor s, CEventList e, String n)
+	{
+		status='i';
+		queue=q;
+		sink=s;
+		eventlist=e;
+		name=n;
+		meanProcTime=30;
+		queue.askProduct(this);
+	}
+
 	public Machine(Queue q, ProductAcceptor s, CEventList e, String n, double meanProcTime)
 	{
 		status='i';
@@ -135,7 +146,7 @@ public class Machine implements CProcess,ProductAcceptor
 		this.standardDeviation = std;
 	}
 
-	public Queue getServiceQueue(){
+	public Queue getServiceQueue() {
 		return this.queue;
 	}
 
