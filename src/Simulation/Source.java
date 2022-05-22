@@ -31,6 +31,7 @@ public class Source implements CProcess
 	*	@param l	The eventlist that is requested to construct events
 	*	@param n	Name of object
 	*/
+
 	public Source(ProductAcceptor q,CEventList l,String n)
 	{
 		list = l;
@@ -38,7 +39,7 @@ public class Source implements CProcess
 		name = n;
 		meanArrTime=33;
 		// put first event in list for initialization
-		list.add(this,0,drawRandomExponential(meanArrTime)); //target,type,time
+		list.add(this,0,drawPoissonDist(meanArrTime)); //target,type,time
 	}
 
 	/**
@@ -56,7 +57,7 @@ public class Source implements CProcess
 		name = n;
 		meanArrTime=m;
 		// put first event in list for initialization
-		list.add(this,0,drawRandomExponential(meanArrTime)); //target,type,time
+		list.add(this,0,drawPoissonDist(meanArrTime)); //target,type,time
 	}
 
 	/**
@@ -85,7 +86,7 @@ public class Source implements CProcess
 		// show arrival
 		System.out.println("Arrival at time = " + tme);
 		// give arrived product to queue
-		Product p = new Product();
+		Product p = new Product(1);
 		p.stamp(tme,"Creation",name);
 		queue.giveProduct(p);
 		// generate duration
@@ -111,25 +112,14 @@ public class Source implements CProcess
 		}
 	}
 	
-	public static double drawRandomExponential(double mean)
-	{
-		// draw a [0,1] uniform distributed number
-		double u = Math.random();
-		// Convert it into a exponentially distributed random variate with mean 33
-		double res = -mean*Math.log(u);
-		return res;
-	}
 
-	public static int drawPoissonDist(double mean)
-	{
-		Random r = new Random();
-		double L = Math.exp(-mean);
-		int k = 0;
-		double p = 1.0;
-		while (p > L){
-			p = p * r.nextDouble();
-			k++;
+
+
+		public static double drawPoissonDist(double t)
+		{
+			double lambda = t;
+			double time = -Math.log(1 - Math.random()) * lambda;
+			return time;
 		}
-		return k - 1;
-	}
+
 }

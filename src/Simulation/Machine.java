@@ -1,8 +1,6 @@
 package Simulation;
 
 
-import java.util.Random;
-import java.util.function.ToDoubleBiFunction;
 
 /**
  *	Machine in a factory
@@ -29,7 +27,8 @@ public class Machine implements CProcess,ProductAcceptor
 	public double[] processingTimes;
 	/** Processing time iterator */
 	public int procCnt;
-	
+	/** Standard deviation	 */
+	private double standardDeviation;
 
 	/**
 	*	Constructor
@@ -39,58 +38,17 @@ public class Machine implements CProcess,ProductAcceptor
 	*	@param e	Eventlist that will manage events
 	*	@param n	The name of the machine
 	*/
-	public Machine(Queue q, ProductAcceptor s, CEventList e, String n)
+	public Machine(Queue q, ProductAcceptor s, CEventList e, String n, double meanProcTime)
 	{
 		status='i';
 		queue=q;
 		sink=s;
 		eventlist=e;
 		name=n;
-		meanProcTime=30;
+		this.meanProcTime = meanProcTime;
 		queue.askProduct(this);
 	}
 
-	/**
-	*	Constructor
-	*        Service times are exponentially distributed with specified mean
-	*	@param q	Queue from which the machine has to take products
-	*	@param s	Where to send the completed products
-	*	@param e	Eventlist that will manage events
-	*	@param n	The name of the machine
-	*        @param m	Mean processing time
-	*/
-	public Machine(Queue q, ProductAcceptor s, CEventList e, String n, double m)
-	{
-		status='i';
-		queue=q;
-		sink=s;
-		eventlist=e;
-		name=n;
-		meanProcTime=m;
-		queue.askProduct(this);
-	}
-	
-	/**
-	*	Constructor
-	*        Service times are pre-specified
-	*	@param q	Queue from which the machine has to take products
-	*	@param s	Where to send the completed products
-	*	@param e	Eventlist that will manage events
-	*	@param n	The name of the machine
-	*        @param st	service times
-	*/
-	public Machine(Queue q, ProductAcceptor s, CEventList e, String n, double[] st)
-	{
-		status='i';
-		queue=q;
-		sink=s;
-		eventlist=e;
-		name=n;
-		meanProcTime=-1;
-		processingTimes=st;
-		procCnt=0;
-		queue.askProduct(this);
-	}
 
 	/**
 	*	Method to have this object execute an event
@@ -145,7 +103,7 @@ public class Machine implements CProcess,ProductAcceptor
 		// generate duration
 		if(meanProcTime>0)
 		{
-			double duration = drawPoissonDist(meanProcTime);
+			double duration = drawRandomNormal(meanProcTime,standardDeviation);
 			//double duration = drawRandomExponential(meanProcTime);
 			// Create a new event in the eventlist
 			double tme = eventlist.getTime();
@@ -169,27 +127,16 @@ public class Machine implements CProcess,ProductAcceptor
 		}
 	}
 
-	public static double drawRandomExponential(double mean)
-	{
-		// draw a [0,1] uniform distributed number
-		double u = Math.random();
-		// Convert it into an exponentially distributed random variate with mean 33
-		double res = -mean*Math.log(u);
-		return res;
+	public double getStandardDeviation() {
+		return standardDeviation;
 	}
 
-	// TODO: Implement this method
-	public static int drawPoissonDist(double mean)
-	{
-		Random r = new Random();
-		double L = Math.exp(-mean);
-		int k = 0;
-		double p = 1.0;
-		while (p > L){
-			p = p * r.nextDouble();
-			k++;
-		}
-		return k - 1;
+	public void setStandardDeviation(double std){
+		this.standardDeviation = std;
+	}
+
+	public Queue getServiceQueue(){
+		return this.queue;
 	}
 
 	public static double drawRandomNormal(double mean, double std)

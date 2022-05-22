@@ -2,27 +2,31 @@ package Simulation;
 
 public class ServiceDesk extends Machine {
 
-    private final double standardDeviation;
+    private  Sink service_sink;
+    private  Sink regular_sink;
+    private Queue regular_desk_q;
 
 
-    public ServiceDesk(Queue q, ProductAcceptor s, CEventList e, String n) {
+
+
+    public ServiceDesk(Queue service_q, Queue regular_desk_q, Sink regular_sink, Sink service_sink, CEventList e, String n) {
         // mean processing time is 4.1/min
-        super(q, s, e, n, (4.1/60));
+        super(service_q, service_sink, e, n, (4.1*60));
 
         // standard deviation is 1.1/minute
-        this.standardDeviation = (1.1/60) ;
+        setStandardDeviation(1.1*60);
+
+        // regular desk queue
+        this.regular_desk_q = regular_desk_q;
+
+        // regular queue and sink to which service desk has access
+        this.regular_sink = regular_sink;
+
+        // service sink
+        this.service_sink = service_sink;
     }
 
-    private void startProduction()
-    {
-        // generate duration with Normal
-        double duration = Machine.drawRandomNormal(meanProcTime, standardDeviation);
-
-        // create new event
-        double tme = eventlist.getTime();
-        eventlist.add(this,0,tme+duration);
-
-        // set status to busy
-        status='b';
+    public int getQLength(){
+        return this.regular_desk_q.getQueueLength() + this.getServiceQueue().getQueueLength();
     }
 }
