@@ -2,9 +2,6 @@ package Simulation;
 
 public class RegularDesk extends Machine {
 
-    private final double standardDeviation;
-
-
     public RegularDesk(Queue q, ProductAcceptor s, CEventList e, String n) {
         // mean processing time is 2.6min
         super(q, s, e, n, (2.6*60));
@@ -16,7 +13,7 @@ public class RegularDesk extends Machine {
     private void startProduction()
     {
         // generate duration with Normal
-        double duration = Machine.drawRandomNormal(meanProcTime, standardDeviation);
+        double duration = Machine.drawRandomNormal(meanProcTime, getStandardDeviation());
 
         // create new event
         double tme = eventlist.getTime();
