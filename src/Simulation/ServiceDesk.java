@@ -8,7 +8,6 @@ public class ServiceDesk extends Machine {
 
 
 
-
     public ServiceDesk(Queue service_q, Queue regular_desk_q, Sink regular_sink, Sink service_sink, CEventList e, String n) {
         // mean processing time is 4.1/min
         super(service_q, service_sink, e, n, (4.1*60));
@@ -24,9 +23,12 @@ public class ServiceDesk extends Machine {
 
         // service sink
         this.service_sink = service_sink;
+
+        //open service desk
+        this.open();
     }
 
     public int getQLength(){
-        return this.regular_desk_q.getQueueLength() + this.getServiceQueue().getQueueLength();
+        return this.regular_desk_q.getQueueLength() + this.getQueue().getQueueLength();
     }
 }

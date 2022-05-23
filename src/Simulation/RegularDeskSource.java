@@ -42,39 +42,39 @@ public class RegularDeskSource implements CProcess {
         Product p = new Product(0);
         p.stamp(tme,"Creation",name);
 
-        //policy for determining to which queue the job will go to
-        if(queue.getQueueLength() >= service_desk_q.getQueueLength())
-        {
-            service_desk_q.giveProduct(p);
-        }
-        else
-        {
-            queue.giveProduct(p);
+        // Solving for shortest queue for regular customers
+        int shortest_q = Integer.MAX_VALUE;
+        Machine shortest_desk = Simulation.all_desks.get(0);
+
+        for(Machine desk : Simulation.all_desks){
+            int q_length = 0;
+            if(desk.isOpen()){
+                q_length = desk.getQueue().getQueueLength();
+                if(desk.getClass() == ServiceDesk.class)
+                    q_length = ((ServiceDesk) desk).getQLength();
+
+                if(q_length < shortest_q) {
+                    shortest_q = q_length;
+                    shortest_desk = desk;
+                }
+            }
+
+            System.out.println("shortest q length = " + q_length);
         }
 
-        double duration = drawPoissonDist( meanArrTime);
-        // Create a new event in the eventlist
+        shortest_desk.giveProduct(p);
+
+        // check if we need to open a new cash register
+        if(allOpenDesksAreFull() && thereIsAClosedDesk()){
+            openAClosedDesk();
+        }
+
+        // calculate duration
+        double duration = drawPoissonDist(meanArrTime);
+
+        // Create a new event in the event list
         list.add(this,0,tme+duration); //target,type,time
 
-        // generate duration
-//        if(meanArrTime>1)
-//        {
-//            double duration = drawPoissonDist( meanArrTime);
-//            // Create a new event in the eventlist
-//            list.add(this,0,tme+duration); //target,type,time
-//        }
-//        else
-//        {
-//            interArrCnt++;
-//            if(interarrivalTimes.length>interArrCnt)
-//            {
-//                list.add(this,0,tme+interarrivalTimes[interArrCnt]); //target,type,time
-//            }
-//            else
-//            {
-//                list.stop();
-//            }
-//        }
     }
     public static double drawPoissonDist(double t)
     {
@@ -83,5 +83,35 @@ public class RegularDeskSource implements CProcess {
         return  time;
     }
 
+    public static boolean allOpenDesksAreFull(){
+        for(Machine desk : Simulation.all_desks) {
+            if(desk.isOpen()){
+                int q_length = desk.getQueue().getQueueLength();
+                if (desk.getClass() == ServiceDesk.class)
+                    q_length = ((ServiceDesk) desk).getQLength();
+                if(q_length < 4)
+                    return false;
+            }
+        }
+        return true;
+    }
 
+    public static boolean thereIsAClosedDesk(){
+        for(Machine desk : Simulation.all_desks) {
+            if(!desk.isOpen()){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static void openAClosedDesk(){
+        Machine desk = Simulation.all_desks.get(0);
+        int index = 1;
+        while(desk.isOpen()){
+            desk = Simulation.all_desks.get(index);
+            index++;
+        }
+        desk.open();
+    }
 }

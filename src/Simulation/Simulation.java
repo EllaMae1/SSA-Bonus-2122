@@ -21,9 +21,9 @@ public class Simulation {
     public ArrayList<Integer>servicedesk_delays;
     public ArrayList<Integer> regular_delays;
     public static int runs = 1;
-    public static int sim_length = 10000;
+    public static int sim_length = 1000;
 
-
+    public static ArrayList<Machine> all_desks = new ArrayList<>();
 
     /**
      * @param args the command line arguments
@@ -56,19 +56,24 @@ public class Simulation {
 
 
             // machines
-            Machine service_desk1 = new ServiceDesk (servicedesk_q,regular_q,regular_sink,service_desk_sink,l,"Service Desk 1");
-
-            Machine regular_server1 = new RegularDesk(regular_q,regular_sink,l,"regular Desk 1");
-            Machine regular_server2 = new RegularDesk(regular_q,regular_sink,l,"regular Desk 2");
-            Machine regular_server3 = new RegularDesk(regular_q,regular_sink,l,"regular Desk 3");
-            Machine regular_server4 = new RegularDesk(regular_q,regular_sink,l,"regular Desk 4");
-            Machine regular_server5 = new RegularDesk(regular_q,regular_sink,l,"regular Desk 5");
+            ServiceDesk service_desk1 = new ServiceDesk (servicedesk_q,regular_q,regular_sink,service_desk_sink,l,"Service Desk 1");
+            all_desks.add(service_desk1);
+            // Open mandatory registers
+            for (int i = 0; i < 5; i++) {
+                Queue queue = new Queue();
+                RegularDesk rd = new RegularDesk(queue, regular_sink, l, "regular desk " + i);
+                if(i < 2)
+                    rd.open();
+                all_desks.add(rd);
+            }
 
             l.start(sim_length);
+            // main policy
+
 
             String[] events = regular_sink.getEvents();
             double[] times = regular_sink.getTimes();
-            String[]stations = regular_sink.getStations();
+            String[] stations = regular_sink.getStations();
             int[] numbers = regular_sink.getNumbers();
            int counter2 = 0;
            for(int i = 0; i< times.length; i++) {
@@ -78,7 +83,7 @@ public class Simulation {
             System.out.println("time = " + times[i]);
             System.out.println("station = " + stations[i]);
             System.out.println();
-
+//
                if(counter2 == 2) {
                    double a = times[i-(counter2-1)] - times[i-counter2];
                    regular_delays.add(a);
@@ -87,6 +92,8 @@ public class Simulation {
                }
                else counter2 ++;
            }
+
+//            System.out.println("times array size = " + times.length);
 
             String[] sd_events = service_desk_sink.getEvents();
             double[] sd_times = service_desk_sink.getTimes();
@@ -111,7 +118,6 @@ public class Simulation {
 
 
             //calculate averages
-
             double sd_temp = 0;
             double sd_average;
             for(int i=0; i<servicedesk_delays.size(); i++) {
@@ -119,13 +125,14 @@ public class Simulation {
             }
             sd_average = sd_temp/servicedesk_delays.size();
 
-
             double regular_temp = 0;
             double regular_average;
             for(int i=0; i<regular_delays.size(); i++) {
                 regular_temp += regular_delays.get(i);
             }
             regular_average = regular_temp/regular_delays.size();
+
+            System.out.println("regular delays array size = " + regular_delays.size());
 
 
             double all_temp = 0;
@@ -135,12 +142,9 @@ public class Simulation {
             }
             all_average = all_temp/all_delays.size();
 
-
             System.out.println("service desk average delay: "+sd_average);
             System.out.println("regular average delay: "+regular_average);
             System.out.println("all average delay: "+all_average);
-
-
 
             StringBuilder sb1 = new StringBuilder();
             StringBuilder sb2 = new StringBuilder();

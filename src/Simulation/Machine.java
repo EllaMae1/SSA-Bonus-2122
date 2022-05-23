@@ -30,6 +30,8 @@ public class Machine implements CProcess,ProductAcceptor
 	/** Standard deviation	 */
 	private double standardDeviation;
 
+	private boolean isOpen;
+
 	/**
 	*	Constructor
 	*        Service times are exponentially distributed with mean 30
@@ -38,17 +40,6 @@ public class Machine implements CProcess,ProductAcceptor
 	*	@param e	Eventlist that will manage events
 	*	@param n	The name of the machine
 	*/
-	public Machine(Queue q, ProductAcceptor s, CEventList e, String n)
-	{
-		status='i';
-		queue=q;
-		sink=s;
-		eventlist=e;
-		name=n;
-		meanProcTime=30;
-		queue.askProduct(this);
-	}
-
 	public Machine(Queue q, ProductAcceptor s, CEventList e, String n, double meanProcTime)
 	{
 		status='i';
@@ -58,8 +49,8 @@ public class Machine implements CProcess,ProductAcceptor
 		name=n;
 		this.meanProcTime = meanProcTime;
 		queue.askProduct(this);
+		isOpen = false;
 	}
-
 
 	/**
 	*	Method to have this object execute an event
@@ -78,6 +69,12 @@ public class Machine implements CProcess,ProductAcceptor
 		status='i';
 		// Ask the queue for products
 		queue.askProduct(this);
+
+		// check that number of open cash registers > 3
+		if(atLeastFourOpenDesks() && getQueue().getQueueLength() == 0){
+			this.close();
+		}
+
 	}
 	
 	/**
@@ -114,7 +111,7 @@ public class Machine implements CProcess,ProductAcceptor
 		// generate duration
 		if(meanProcTime>0)
 		{
-			double duration = drawRandomNormal(meanProcTime,standardDeviation);
+			double duration = drawRandomNormal(meanProcTime,standardDeviation) + 1;
 			//double duration = drawRandomExponential(meanProcTime);
 			// Create a new event in the eventlist
 			double tme = eventlist.getTime();
@@ -138,6 +135,15 @@ public class Machine implements CProcess,ProductAcceptor
 		}
 	}
 
+	public static boolean atLeastFourOpenDesks(){
+		int count = 0;
+		for(Machine desk : Simulation.all_desks){
+			if(desk.isOpen())
+				count++;
+		}
+		return count > 3;
+	}
+
 	public double getStandardDeviation() {
 		return standardDeviation;
 	}
@@ -146,8 +152,20 @@ public class Machine implements CProcess,ProductAcceptor
 		this.standardDeviation = std;
 	}
 
-	public Queue getServiceQueue() {
+	public Queue getQueue(){
 		return this.queue;
+	}
+
+	public boolean isOpen(){
+		return this.isOpen;
+	}
+
+	public void open(){
+		this.isOpen = true;
+	}
+
+	public void close(){
+		this.isOpen = false;
 	}
 
 	public static double drawRandomNormal(double mean, double std)

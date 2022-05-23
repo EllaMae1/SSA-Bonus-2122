@@ -27,7 +27,6 @@ class Product
 		this.type = t;
 	}
 	
-	
 	public void stamp(double time,String event,String station)
 	{
 		times.add(time);

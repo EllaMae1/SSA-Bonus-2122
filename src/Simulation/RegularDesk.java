@@ -10,16 +10,7 @@ public class RegularDesk extends Machine {
         setStandardDeviation(1.1*60);
     }
 
-    private void startProduction()
-    {
-        // generate duration with Normal
-        double duration = Machine.drawRandomNormal(meanProcTime, getStandardDeviation());
-
-        // create new event
-        double tme = eventlist.getTime();
-        eventlist.add(this,0,tme+duration);
-
-        // set status to busy
-        status='b';
+    public int getQLength(){
+        return this.getQueue().getQueueLength();
     }
 }
